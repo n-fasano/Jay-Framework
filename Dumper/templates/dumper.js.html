@@ -1,0 +1,14 @@
+<script>
+    document.addEventListener('DOMContentLoaded', e => {
+        document.querySelectorAll('.dumpster').forEach(dumpster => {
+            const dumps = Array.from(dumpster.children).filter(child => child.classList.contains('dump'));
+            dumps.forEach(function (dump) {
+                dump.addEventListener('click', function (e) {
+                    dumps.forEach(_dump => _dump.classList.remove('dump-open'));
+                    this.classList.toggle('dump-open');
+                    e.stopPropagation();
+                });
+            });
+        });
+    });
+</script>

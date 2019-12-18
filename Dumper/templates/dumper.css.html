@@ -1,0 +1,94 @@
+<style>
+    .dumpster-wrapper {
+        width: 70%;
+        padding: 5px;
+        background: black;
+        color: yellow;
+        font-family: Helvetica, sans-serif;
+        margin: auto;
+
+        border-radius: 8px;
+        border: 2px solid white;
+    }
+
+    .dumpster-wrapper>h4 {
+        padding: 0;
+        margin: 0;
+    }
+
+    .dumpster-wrapper>ul {
+        padding: 5px 10px;
+    }
+
+    .dumpster .dumpster {
+        display: none;
+        padding-left: 20px;
+        margin-left: 10px;
+    }
+
+    .dump {
+        display: block;
+        text-decoration: none;
+        cursor: pointer;
+        text-indent: 2px;
+    }
+
+    .dump:hover>h6 {
+        text-decoration: underline;
+    }
+
+    .dump h6 {
+        display: inline;
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    .dump::before {
+        content: '';
+        display: inline-block;
+        height: 0;
+        width: 0;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-left: 8px solid white;
+        position: relative;
+        top: -1px;
+        left: -1px;
+    }
+
+    .dump.dump-open::before {
+        border-bottom: unset;
+        border-top: 8px solid white;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+    }
+
+    ul.dumpster {
+        margin: 2px;
+        list-style-type: none;
+    }
+
+    .dump.dump-open>ul {
+        display: block;
+    }
+
+    .dump-type.int {
+        color: coral;
+    }
+
+    .dump-type.str {
+        color: lightblue;
+    }
+
+    .dump-type.arr {
+        color: greenyellow;
+    }
+
+    .dump-type.obj {
+        color: darkgray;
+    }
+
+    .dump-type.NUL {
+        color: red;
+    }
+</style>
