@@ -52,7 +52,8 @@ function real_dump_array(array $array, int $depth, string $propertyName = '')
                 <ul class='dumpster'>
         ";
         foreach ($array as $key => $value) {
-            real_dump($value, $depth + 1, $key . ' => ');
+            $type = substr(gettype($key), 0, 3);
+            real_dump($value, $depth + 1, "<span class='dump-type $type'>($type)</span> " . $key . ' => ');
         }
         echo "
                 </ul>

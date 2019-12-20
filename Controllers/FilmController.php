@@ -13,7 +13,7 @@ class FilmController
 
     public function __construct()
     {
-        $this->property1 = ['1'];
+        $this->property1 = ['clef' => 'valeur'];
         $this->property2 = new OtherController;
         $this->property3 = 1;
     }
