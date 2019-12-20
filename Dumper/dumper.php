@@ -79,8 +79,9 @@ function real_dump_obj(object $obj, int $depth, string $propertyName = '')
             $property->setAccessible(true);
             $name = $property->getName();
             $value = $property->getValue($obj);
+            $modifiers[0] = getModifierSign($modifiers[0]);
 
-            $propName = "$modifiers[0] $name: ";
+            $propName = "$modifiers[0]$name: ";
             real_dump($value, $depth + 1, $propName);
         }
         echo "
@@ -96,4 +97,13 @@ function file_info()
 {
     $backtrace = debug_backtrace();
     echo '<h4>' . $backtrace[1]['file'] . ' - Line ' . $backtrace[1]['line'] . '</h4>';
+}
+
+function getModifierSign(string $modifier)
+{
+    return [
+        'public' => '+',
+        'protected' => '_',
+        'private' => '#',
+    ][$modifier];
 }

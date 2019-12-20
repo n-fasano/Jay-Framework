@@ -3,7 +3,7 @@
         document.querySelectorAll('.dumpster').forEach(dumpster => {
             const dumps = Array.from(dumpster.children).filter(child => child.classList.contains('dump'));
             dumps.forEach(function (dump) {
-                const H6 = Array.from(dump.children).filter(child => child.tagName === 'H6')[0];
+                const H6 = Array.from(dump.children).find(child => child.tagName === 'H6');
                 H6.addEventListener('click', e => {
                     dump.classList.toggle('dump-open');
                     e.stopPropagation();
