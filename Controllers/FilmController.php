@@ -2,8 +2,6 @@
 
 namespace Controllers;
 
-use stdClass;
-
 /**
  * Coucou
  */

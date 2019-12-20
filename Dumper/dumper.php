@@ -30,29 +30,29 @@ function dd()
     die;
 }
 
-function real_dump($var, int $depth = 0)
+function real_dump($var, int $depth = 0, string $propertyName = '')
 {
     $type = substr(gettype($var), 0, 3);
     if ($type === 'arr' && $depth < 5) {
-        real_dump_array($var, $depth);
+        real_dump_array($var, $depth, $propertyName);
     } else if ($type === 'obj') {
-        real_dump_obj($var, $depth);
+        real_dump_obj($var, $depth, $propertyName);
     } else {
-        echo "<li><span class='dump-type $type'>($type)</span> $var</li>";
+        echo "<li>$propertyName<span class='dump-type $type'>($type)</span> $var</li>";
     }
 }
 
-function real_dump_array(array $array, int $depth)
+function real_dump_array(array $array, int $depth, string $propertyName = '')
 {
     $count = count($array);
     if ($depth < 5) {
         echo "
             <li class='dump'>
-                <span class='dump-type arr'>[array]</span> ($count)
+                $propertyName<span class='dump-type arr'>[array]</span> ($count)
                 <ul class='dumpster'>
         ";
         foreach ($array as $key => $value) {
-            real_dump($value, $depth + 1);
+            real_dump($value, $depth + 1, $key . ' => ');
         }
         echo "
                 </ul>
@@ -63,29 +63,24 @@ function real_dump_array(array $array, int $depth)
     }
 }
 
-function real_dump_obj(object $obj, int $depth, string $propertyName = null)
+function real_dump_obj(object $obj, int $depth, string $propertyName = '')
 {
     $class = get_class($obj);
     $properties = (new ReflectionClass($obj))->getProperties();
     if ($depth < 5) {
         echo "
             <li class='dump'>
-                <span class='dump-type obj'>{obj}</span> $class
+                $propertyName<span class='dump-type obj'>{obj}</span> $class
                 <ul class='dumpster'>
         ";
         foreach ($properties as $property) {
+            $modifiers = Reflection::getModifierNames($property->getModifiers());
             $property->setAccessible(true);
             $name = $property->getName();
             $value = $property->getValue($obj);
-            $type = substr(gettype($value), 0, 3);
-            if ($type === 'arr') {
-                $count = count($value);
-                echo "<li>$name: <span class='dump-type arr'>[array]</span> ($count)</li>";
-            } else if ($type === 'obj') {
-                echo "<li>$name: <span class='dump-type obj'>{obj}</span> $class</li>";
-            } else {
-                echo "<li>$name: <span class='dump-type $type'>($type)</span> $value</li>";
-            }
+
+            $propName = "$modifiers[0] $name: ";
+            real_dump($value, $depth + 1, $propName);
         }
         echo "
                 </ul>

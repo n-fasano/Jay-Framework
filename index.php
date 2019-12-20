@@ -1,12 +1,10 @@
 <?php
 
-use Controllers\FilmController;
-
 require_once 'config.php';
 require_once 'autoloader.php';
 require_once 'Dumper/dumper.php';
 
-$obj = new FilmController;
+$obj = new Controllers\FilmController;
 dd('hey', ['coucou', 'voilà', ['le', 'sous', 'tableau', 'marche', 'parfaitement', '!!!']], 1, $obj);
 // $controller = new Controllers\FilmController;
 // $reflection = new ReflectionClass($controller);
