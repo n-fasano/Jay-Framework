@@ -48,7 +48,7 @@ function real_dump_array(array $array, int $depth, string $propertyName = '')
     if ($depth < 5) {
         echo "
             <li class='dump'>
-                $propertyName<span class='dump-type arr'>[array]</span> ($count)
+                $propertyName<h6><span class='dump-type arr'>[array]</span> ($count)</h6>
                 <ul class='dumpster'>
         ";
         foreach ($array as $key => $value) {
@@ -71,7 +71,7 @@ function real_dump_obj(object $obj, int $depth, string $propertyName = '')
     if ($depth < 5) {
         echo "
             <li class='dump'>
-                $propertyName<span class='dump-type obj'>{obj}</span> $class
+                $propertyName<h6><span class='dump-type obj'>{obj}</span> $class</h6>
                 <ul class='dumpster'>
         ";
         foreach ($properties as $property) {

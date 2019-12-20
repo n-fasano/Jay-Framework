@@ -3,14 +3,9 @@
         document.querySelectorAll('.dumpster').forEach(dumpster => {
             const dumps = Array.from(dumpster.children).filter(child => child.classList.contains('dump'));
             dumps.forEach(function (dump) {
-                dump.addEventListener('click', function (e) {
-                    // if (this.classList.contains('dump-open')) {
-                    //     dumps.forEach(_dump => _dump.classList.remove('dump-open'));
-                    // } else {
-                    //     dumps.forEach(_dump => _dump.classList.remove('dump-open'));
-                    //     this.classList.add('dump-open');
-                    // }
-                    this.classList.toggle('dump-open');
+                const H6 = Array.from(dump.children).filter(child => child.tagName === 'H6')[0];
+                H6.addEventListener('click', e => {
+                    dump.classList.toggle('dump-open');
                     e.stopPropagation();
                 });
             });

@@ -26,24 +26,24 @@
         margin-left: 10px;
     }
 
-    .dump {
+    .dump>h6 {
         display: block;
         text-decoration: none;
         cursor: pointer;
         text-indent: 2px;
     }
 
-    .dump:hover>h6 {
+    .dump>h6:hover {
         text-decoration: underline;
     }
 
-    .dump h6 {
+    .dump>h6 {
         display: inline;
         font-size: 16px;
         font-weight: normal;
     }
 
-    .dump::before {
+    .dump>h6::before {
         content: '';
         display: inline-block;
         height: 0;
@@ -56,7 +56,7 @@
         left: -1px;
     }
 
-    .dump.dump-open::before {
+    .dump.dump-open>h6::before {
         border-bottom: unset;
         border-top: 8px solid white;
         border-right: 4px solid transparent;
