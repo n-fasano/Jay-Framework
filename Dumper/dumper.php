@@ -60,7 +60,7 @@ function real_dump_array(array $array, int $depth, string $propertyName = '')
             </li>
         ";
     } else {
-        echo "<li><span class='dump-type arr'>[array]</span> ($count)</li>";
+        echo "<li>$propertyName<span class='dump-type arr'>[array]</span> ($count)</li>";
     }
 }
 
@@ -89,7 +89,7 @@ function real_dump_obj(object $obj, int $depth, string $propertyName = '')
             </li>
         ";
     } else {
-        echo "<li><span class='dump-type obj'>{obj}</span> $class</li>";
+        echo "<li>$propertyName<span class='dump-type obj'>{obj}</span> $class</li>";
     }
 }
 

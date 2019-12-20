@@ -5,7 +5,7 @@ require_once 'autoloader.php';
 require_once 'Dumper/dumper.php';
 
 $obj = new Controllers\FilmController;
-dd('hey', ['coucou', 'voilà', ['le', 'sous', 'tableau', 'marche', 'parfaitement', '!!!']], 1, $obj);
+dd('hey', ['coucou', 'voilà', ['le', 'sous', 'tableau', 'marche', 'parfaitement', '!!!']], 1.1, $obj);
 // $controller = new Controllers\FilmController;
 // $reflection = new ReflectionClass($controller);
 // $methods = $reflection->getMethods();
