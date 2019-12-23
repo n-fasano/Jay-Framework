@@ -4,24 +4,18 @@ require_once 'config.php';
 require_once 'autoloader.php';
 require_once 'Dumper/dumper.php';
 
-$obj = new Controllers\FilmController;
-dd('hey', ['coucou', 'voilà', ['le', 'sous', 'tableau', 'marche', 'parfaitement', '!!!']], 1.1, $obj);
-// $controller = new Controllers\FilmController;
-// $reflection = new ReflectionClass($controller);
-// $methods = $reflection->getMethods();
-// $properties = $reflection->getProperties();
-// $comment = $reflection->getDocComment();
-
-// dd($reflection, $methods, $properties, $comment);
-
-// exit;
+// $obj = new Controllers\FilmController;
+// dd('hey', ['coucou', 'voilà', ['le', 'sous', 'tableau', 'marche', 'parfaitement', '!!!']], 1.1, $obj);
 
 $routeMatcher = new Routing\RouteMatcher;
-$controller_callable = $routeMatcher->resolve()['callable'];
-// dd($controller_callable);
-$controller = new $controller_callable[0];
+$routeInfo = $routeMatcher->resolve();
 
-$response = $controller->{$controller_callable[1]}();
+$controller = $routeInfo['controller'];
+$method = $routeInfo['method'];
+$arguments = $routeInfo['parameters'];
 
-header('Content-Type: application/json');
-die(json_encode($response));
+$reflectionMethod = new ReflectionMethod($controller, $method);
+$response = $reflectionMethod->invokeArgs(new $controller, $arguments);
+
+echo $response;
+die;

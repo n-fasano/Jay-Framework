@@ -1,0 +1,73 @@
+<?php
+
+if(!isset($argv[1])) {
+    echo 'Please specify the name of the new data class !';
+    die;
+}
+
+$class = $argv[1];
+$file = 
+"<?php
+
+class $class
+{";
+
+$properties = [];
+while(true) {
+    echo "Please enter a new property: ";
+    $property = trim(fgets(STDIN));
+    if(!$property) {
+        break;
+    }
+
+    echo "What type is it? ";
+    $type = trim(fgets(STDIN));
+    if(!$type) {
+        continue;
+    }
+
+    $properties[] = [$property, $type];
+}
+
+foreach($properties as $i => $data) {
+    $property = $data[0];
+    $type = $data[1];
+
+    if($i !== 0) {
+        $file .= "
+        ";
+    }
+    $file .= "
+    /**
+     * $type
+     */
+    " . 'private $' . "$property;";
+}
+
+foreach($properties as $i => $data) {
+    $property = $data[0];
+    $property_func_name = ucfirst($data[0]);
+    $type = $data[1];
+
+    if($i === 0) {
+        $file .= "
+        ";
+    }
+    $file .= "
+    public function get$property_func_name(): $type
+    {
+        return \$this->$property;
+    }
+
+    public function set$property_func_name($type \$$property)
+    {
+        \$this->$property = \$$property;
+
+        return \$this;
+    }
+";
+}
+
+$file .= "}";
+
+file_put_contents($class . '.php', $file);

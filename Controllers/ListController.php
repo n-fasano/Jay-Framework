@@ -5,7 +5,7 @@ namespace Controllers;
 /**
  * Coucou
  */
-class FilmController
+class ListController
 {
     public $property1;
     protected $property2;
@@ -19,34 +19,32 @@ class FilmController
     }
 
     /**
-     * @Route /films
-     * @Info Coucou
+     * @Route /listes
      */
     public function index()
     {
-        include BASE_DIR . '/templates/index.html';
-        die;
+        ob_start();
+        include BASE_DIR . '/templates/app.html';
+        return ob_get_clean();
     }
 
     /**
-     * @Route /films/#int
-     * @COUCOU
+     * @Route /liste/#int
      */
     public function show(int $id)
     {
-        return [
-            'show' => 2
-        ];
+        return "show => { id: $id }";
     }
+
+
 
     /**
      * @Route /videos
      * @COUCOU
+     * @Route /guidon
      */
     public function create()
     {
-        return [
-            'show' => 2
-        ];
+        return 'create list';
     }
 }

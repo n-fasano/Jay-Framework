@@ -7,9 +7,12 @@ class RouteMatcher
     public function resolve()
     {
         $uri = $_SERVER['REQUEST_URI'];
-        $parameters = array_filter(explode('/', $uri), function ($parameter) {
-            return $parameter;
-        });
+        $parameters = preg_split(
+            '/(\/[^\/]+)/',
+            $uri,
+            null,
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+        );
         $all_routes = (new \Cache\Metadata)->getRoutes();
 
         return $this->match($all_routes, $parameters);
@@ -17,31 +20,45 @@ class RouteMatcher
 
     public function match($routes, $parameters)
     {
-        $last_match = DEFAULT_ROUTE;
+        $last_match = null;
 
-        $test_route = '/';
-        foreach ($routes as $route => $callable) {
-            if ($test_route === $route) {
-                $last_match = $callable;
-            }
-        }
-
+        $test_route = '';
         foreach ($parameters as $i => $parameter) {
             $test_route .= $parameter;
-            foreach ($routes as $route => $callable) {
+            foreach ($routes as $route => $data) {
                 if ($test_route === $route) {
-                    $last_match = $callable;
+                    $last_match = $data;
                 }
 
-                if (strpos($route, '#')) {
-                    if (preg_replace('/#[^\/]+/', $parameter, $route) === $test_route) {
-                        $last_match = $callable;
+                if (
+                    strpos($route, '#')
+                    && preg_replace('/\/#[^\/]+/', $parameter, $route) === $test_route
+                ) {
+                    $arg = str_replace('/', '', $parameter);
+                    if (settype($arg, $data['parameters'][0]['type'])) {
+                        $last_match = $data;
+                        $last_match['parameters'] = [
+                            $data['parameters'][0]['name'] => $arg,
+                        ];
                     }
                 }
             }
-            $test_route .= '/';
         }
 
-        return $last_match;
+        return $last_match ?? $this->getDefaultRoute();
+    }
+
+    public function getDefaultRoute()
+    {
+        $data = explode('::', DEFAULT_ROUTE);
+        $controller = $data[0];
+        $method = $data[1];
+        $parameters = [];
+
+        return [
+            'controller' => $controller,
+            'method' => $method,
+            'parameters' => $parameters,
+        ];
     }
 }

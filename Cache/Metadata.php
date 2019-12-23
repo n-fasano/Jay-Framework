@@ -8,7 +8,7 @@ class Metadata
 
     public function identify($classname)
     {
-        $fileName = 'Cache/data/' . md5($classname) . '.json';
+        $fileName = 'Cache/data/' . str_replace('\\', '_', strtolower($classname)) . '.json';
         if (!$this->isCached($fileName)) {
             $this->setCache($fileName, new $classname);
         }
@@ -63,7 +63,8 @@ class Metadata
 
             foreach ($matches as $i => $match) {
                 $data = explode(' ', $match);
-                $metadata[$method->getName()][$data[0]] = $data[1] ?? null;
+                $methodName = $method->getName();
+                $metadata[$methodName][$data[0]] = $data[1] ?? null;
 
                 if ($data[0] === '@Route') {
                     $method_params = array_map(function ($param) {
@@ -73,14 +74,17 @@ class Metadata
                             'nullable' => $param->isDefaultValueAvailable()
                         ];
                     }, $method->getParameters());
-                    $metadata['__routes'][$data[1]] = [
-                        'callable' => [get_class($object), $method->getName()],
-                        'route_parameters' => array_filter(explode('/', $data[1]), function ($e) {
+
+                    $route = $data[1];
+                    $metadata['__routes'][$route] = [
+                        'controller' => get_class($object),
+                        'method' => $methodName,
+                        'route_parameters' => array_filter(explode('/', $route), function ($e) {
                             return $e;
                         }),
                         'parameters' => $method_params
                     ];
-                    $metadata[$method->getName()]['parameters'] = $method_params;
+                    $metadata[$methodName]['parameters'] = $method_params;
                 }
             }
         }

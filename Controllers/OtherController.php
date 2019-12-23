@@ -29,10 +29,10 @@ class OtherController
     }
 
     /**
-     * @Route /
+     * @Route /base
      */
     public function base()
     {
-        echo 'great';
+        return 'great';
     }
 }

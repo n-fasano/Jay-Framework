@@ -3,6 +3,7 @@
 function dump()
 {
     $vars = func_get_args();
+    include_once 'templates/dumper.css.html';
     echo '<div class="dumpster-wrapper">';
     echo '<ul class="dumpster">';
     foreach ($vars as $var) {
@@ -10,13 +11,13 @@ function dump()
     }
     echo '</ul>';
     echo '</div>';
-    include_once 'templates/dumper.css.html';
     include_once 'templates/dumper.js.html';
 }
 
 function dd()
 {
     $vars = func_get_args();
+    include_once 'templates/dumper.css.html';
     echo '<div class="dumpster-wrapper">';
     file_info();
     echo '<ul class="dumpster">';
@@ -25,7 +26,6 @@ function dd()
     }
     echo '</ul>';
     echo '</div>';
-    include_once 'templates/dumper.css.html';
     include_once 'templates/dumper.js.html';
     die;
 }
@@ -37,6 +37,9 @@ function real_dump($var, int $depth = 0, string $propertyName = '')
         real_dump_array($var, $depth, $propertyName);
     } else if ($type === 'obj') {
         real_dump_obj($var, $depth, $propertyName);
+    } else if ($type === 'boo') {
+        $varStr = $var ? 'true' : 'false';
+        echo "<li>$propertyName<span class='dump-type $type'>($type)</span> $varStr</li>";
     } else {
         echo "<li>$propertyName<span class='dump-type $type'>($type)</span> $var</li>";
     }
