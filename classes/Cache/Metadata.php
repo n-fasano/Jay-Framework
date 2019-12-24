@@ -8,7 +8,7 @@ class Metadata
 
     public function identify($classname)
     {
-        $fileName = 'Cache/data/' . str_replace('\\', '_', strtolower($classname)) . '.json';
+        $fileName = 'classes/Cache/data/' . str_replace('\\', '_', strtolower($classname)) . '.json';
         if (!$this->isCached($fileName)) {
             $this->setCache($fileName, new $classname);
         }
@@ -96,7 +96,7 @@ class Metadata
     {
         $routes = [];
         foreach ($controller_dir as $filename) {
-            if (is_file("Controllers/$filename")) {
+            if (is_file("classes/Controllers/$filename")) {
                 $controllerName = '\\Controllers\\' . str_replace('.php', '', $filename);
                 $controllerMetadata = $this->identify($controllerName);
                 if (isset($controllerMetadata['__routes'])) {
@@ -112,7 +112,7 @@ class Metadata
             '__hash' => $hash
         ];
 
-        if (!file_put_contents('Cache/data/__routes.json', json_encode($data))) {
+        if (!file_put_contents('classes/Cache/data/__routes.json', json_encode($data))) {
             throw new \Error('Can\'t write to cache.');
         }
 
@@ -121,20 +121,20 @@ class Metadata
 
     public function getRoutes()
     {
-        $controller_dir = array_slice(scandir('Controllers'), 2);
+        $controller_dir = array_slice(scandir('classes/Controllers'), 2);
         $contents = '';
         foreach ($controller_dir as $controller) {
-            $content_ = file_get_contents("Controllers/$controller");
+            $content_ = file_get_contents("classes/Controllers/$controller");
             if ($content_) {
                 $contents .= $content_;
             }
         }
         $hash = md5($contents);
 
-        if (!is_file('Cache/data/__routes.json')) {
+        if (!is_file('classes/Cache/data/__routes.json')) {
             $data = $this->routeCensus($controller_dir, $hash);
         } else {
-            $data = json_decode(file_get_contents('Cache/data/__routes.json'), true);
+            $data = json_decode(file_get_contents('classes/Cache/data/__routes.json'), true);
 
             if ($data['__hash'] !== $hash) {
                 $data = $this->routeCensus($controller_dir, $hash);

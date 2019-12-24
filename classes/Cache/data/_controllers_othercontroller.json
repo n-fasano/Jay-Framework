@@ -1,0 +1,1 @@
+{"toDo":{"@Route":"\/other","parameters":[]},"__routes":{"\/other":{"controller":"Controllers\\OtherController","method":"toDo","route_parameters":{"1":"other"},"parameters":[]},"\/base":{"controller":"Controllers\\OtherController","method":"base","route_parameters":{"1":"base"},"parameters":[]}},"base":{"@Route":"\/base","parameters":[]},"__timestamp":1577228433}

@@ -56,6 +56,10 @@ let products = [
     {
         title: 'Un vol-au-vent succulent',
         price: 48
+    },
+    {
+        title: 'Un autre produit',
+        price: 17.77
     }
 ];
 
@@ -64,6 +68,6 @@ $('#hideBtn').on('click', e => product_page.setState({
     hidden: !product_page.state.hidden.value
 }));
 
-// product_page.setState({ products: products });
+product_page.setState({ products: products });
 
 function changeTitle(e) { }

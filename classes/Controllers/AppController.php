@@ -10,7 +10,7 @@ class AppController
     public function app()
     {
         ob_start();
-        include BASE_DIR . '/templates/app.html';
+        include BASE_DIR . '/public/app.html';
         return ob_get_clean();
     }
 }

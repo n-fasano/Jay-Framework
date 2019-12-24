@@ -1,0 +1,66 @@
+{
+    "__routes": {
+        "\/": {
+            "controller": "Controllers\\AppController",
+            "method": "app",
+            "route_parameters": [],
+            "parameters": []
+        },
+        "\/listes": {
+            "controller": "Controllers\\ListController",
+            "method": "index",
+            "route_parameters": {
+                "1": "listes"
+            },
+            "parameters": []
+        },
+        "\/liste\/#int": {
+            "controller": "Controllers\\ListController",
+            "method": "show",
+            "route_parameters": {
+                "1": "liste",
+                "2": "#int"
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": "int",
+                    "nullable": false
+                }
+            ]
+        },
+        "\/videos": {
+            "controller": "Controllers\\ListController",
+            "method": "create",
+            "route_parameters": {
+                "1": "videos"
+            },
+            "parameters": []
+        },
+        "\/guidon": {
+            "controller": "Controllers\\ListController",
+            "method": "create",
+            "route_parameters": {
+                "1": "guidon"
+            },
+            "parameters": []
+        },
+        "\/other": {
+            "controller": "Controllers\\OtherController",
+            "method": "toDo",
+            "route_parameters": {
+                "1": "other"
+            },
+            "parameters": []
+        },
+        "\/base": {
+            "controller": "Controllers\\OtherController",
+            "method": "base",
+            "route_parameters": {
+                "1": "base"
+            },
+            "parameters": []
+        }
+    },
+    "__hash": "2a36313d7c72871e80de6c80c4acdd40"
+}

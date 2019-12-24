@@ -24,7 +24,7 @@ class ListController
     public function index()
     {
         ob_start();
-        include BASE_DIR . '/templates/app.html';
+        include PUBLIC_DIR . '/templates/app.html';
         return ob_get_clean();
     }
 
