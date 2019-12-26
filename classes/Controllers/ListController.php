@@ -23,17 +23,23 @@ class ListController
      */
     public function index()
     {
-        ob_start();
-        include PUBLIC_DIR . '/templates/app.html';
-        return ob_get_clean();
+        return 'ListController::index /listes';
     }
 
     /**
-     * @Route /liste/#int
+     * @Route /liste/#int/show
      */
     public function show(int $id)
     {
         return "show => { id: $id }";
+    }
+
+    /**
+     * @Route /liste/#int/update
+     */
+    public function update(int $id)
+    {
+        return "update => { id: $id }";
     }
 
 

@@ -101,11 +101,26 @@ class Metadata
                 $controllerMetadata = $this->identify($controllerName);
                 if (isset($controllerMetadata['__routes'])) {
                     foreach ($controllerMetadata['__routes'] as $route => $callable) {
-                        $routes[$route] = $callable;
+                        $route_split = preg_split(
+                            '/(\/[^\/]+)/',
+                            $route,
+                            null,
+                            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+                        );
+                        $current_array = &$routes;
+                        foreach($route_split as $r) {
+                            if(!isset($current_array[$r])) {
+                                $current_array[$r] = [];
+                            }
+                            $current_array = &$current_array[$r];
+                        }
+                        $current_array['callable'] = $callable;
                     }
                 }
             }
         }
+
+        ksort($routes);
 
         $data = [
             '__routes' => $routes,
