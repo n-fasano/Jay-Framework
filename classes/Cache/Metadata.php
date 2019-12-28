@@ -31,7 +31,7 @@ class Metadata
     {
         $metadata = $this->getMetadata($classname);
         $metadata['__timestamp'] = time();
-        file_put_contents($fileName, json_encode($metadata));
+        file_put_contents($fileName, json_encode($metadata, JSON_UNESCAPED_SLASHES));
         return $metadata;
     }
 

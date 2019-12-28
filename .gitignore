@@ -1,1 +1,2 @@
-classes/Cache/data/
+/classes/Cache/data/
+!/classes/Cache/data/.gitkeep
