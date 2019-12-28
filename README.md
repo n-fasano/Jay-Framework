@@ -12,4 +12,9 @@ Sat, 21st of December, 2019:
 Mon, 23rd of December, 2019:  
   - Added .gitignore  
   - Changed routing: added parameter injection  
-  
+
+Sat, 28th of December, 2019:
+  - Made subdirectories possible in the controllers directory
+  - Made it so controllers themselves can have a route (thus all their method routes have a prefix)
+  - Started working on the front-end framework again
+  - This code is feeling familiar again, improved it slightly
