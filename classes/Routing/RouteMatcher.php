@@ -4,50 +4,52 @@ namespace Routing;
 
 class RouteMatcher
 {
-    public function resolve()
+    public function resolve(string $path): array
     {
-        $uri = $_SERVER['REQUEST_URI'];
-        $parameters = preg_split(
+        $segments = preg_split(
             '/(\/[^\/]+)/',
-            $uri,
+            $path,
             null,
             PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
         );
         $all_routes = (new \Cache\Metadata)->getRoutes();
 
-        return $this->match($all_routes, $parameters);
+        return $this->match($all_routes, $segments);
     }
 
-    public function match($routes, $uri_parameters)
+    public function match(array $routes, array $path_segments): array
     {
         $current_route = $routes;
-        $function_parameters = [];
-        foreach ($uri_parameters as $uri_parameter) {
-            if (isset($current_route[$uri_parameter])) {
-                $current_route = &$current_route[$uri_parameter];
+        $method_parameters = [];
+        foreach ($path_segments as $segment) {
+            if (isset($current_route[$segment])) {
+                $current_route = &$current_route[$segment];
             } else {
                 foreach($current_route as $route => $data) {
                     if (strpos($route, '#')) {
-                        $arg = str_replace('/', '', $uri_parameter);
+                        $arg = str_replace('/', '', $segment);
                         $paramType = str_replace('/#', '', $route);
                         if (settype($arg, $paramType)) {
                             $current_route = $data;
-                            $function_parameters[] = $arg;
+                            $method_parameters[] = $arg;
                         }
                     }
                 }
             }
         }
 
-        if(!$current_route['callable']) {
-            return $this->getDefaultRoute();
+        if(!isset($current_route['callable'])) {
+            if (!isset($current_route['/'])) {
+                return self::getDefaultRoute();
+            }
+            $current_route = $current_route['/'];
         }
 
-        $current_route['callable']['parameters'] = $function_parameters;
+        $current_route['callable']['parameters'] = $method_parameters;
         return $current_route['callable'];
     }
 
-    public function getDefaultRoute()
+    public static function getDefaultRoute(): array
     {
         $data = explode('::', DEFAULT_ROUTE);
         $controller = $data[0];

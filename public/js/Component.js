@@ -20,12 +20,12 @@ class Component {
   }
 
   constructor({ template, root, state }) {
+    this.i = 0;
     this.regex = new RegExp(`{{ *?([^{} ]*) *?}}`, "g");
     this.root = {
       element: root,
       children: this.buildTree(Utility.strToHTML(template))
     };
-    console.log(this.root);
     this.initState();
     this.setState(state);
     this.template = template;
@@ -46,6 +46,7 @@ class Component {
         textContent: element.textContent,
         children: this.buildTree(element.children)
       };
+      
       newChildren.push(child);
     }
     return newChildren;
@@ -88,12 +89,7 @@ class Component {
   }
 
   initState() {
-    this.state = {
-      hidden: {
-        value: false,
-        listeners: this.findVariableListeners(this.root.children, "hidden")
-      }
-    };
+    this.state = {};
   }
 
   setState(state) {
@@ -112,55 +108,60 @@ class Component {
     }
   }
 
+  getState(variable) {
+    if(this.state[variable]) {
+      return this.state[variable].value;
+    }
+    return null;
+  }
+
   findVariableListeners(elements, variable) {
     let listeners = [];
-
+    
     for (const element of elements) {
       if (element.children.length > 0) {
         listeners.push(
           ...this.findVariableListeners(element.children, variable)
         );
       }
+      let realElement = element.element;
       if (
-        element.element.childNodes.length > 0 &&
-        element.element.childNodes[0].nodeValue.match(
+        realElement.childNodes.length > 0 &&
+        realElement.textContentTemplate.match(
           new RegExp(`{{ *?${variable} *?}}`, "g")
         )
       ) {
-        element.element.setTextContentTemplate(element.element.innerText);
         listeners.push({
           element: element,
           callback: value => {
-            element.element.innerText = element.element.textContentTemplate.replace(
+            realElement.textContent = element.textContent.replace(
               new RegExp(`{{ *?${variable} *?}}`, "g"),
               value
             );
           }
         });
-      } else if (element.element.getAttribute("if") == variable) {
+      } else if (realElement.getAttribute("if") == variable) {
         listeners.push({
           element: element,
           callback: bool =>
-            bool ? element.element.hide() : element.element.show()
+            bool ? realElement.hide() : realElement.show()
         });
-      } else if (element.element.getAttribute("for") == variable) {
+      } else if (realElement.getAttribute("foreach") == variable) {
         listeners.push({
           element: element,
           callback: array => {
-            let parent = element.element.parentElement;
-            parent.innerHTML = "";
+            realElement.innerHTML = "";
             for (let i = 0; i < array.length; i++) {
               const object = array[i];
-              let newElement = element.element.cloneNode(true);
-              let templateString = element.element.innerHTMLTemplate;
+              let templateString = realElement.innerHTMLTemplate;
               for (const key in object) {
                 templateString = templateString.replace(
                   new RegExp(`{{ *?${key} *?}}`, "g"),
                   object[key]
                 );
               }
-              newElement.innerHTML = templateString;
-              parent.append(newElement);
+              let newElement = Component.createElementFromHTML(templateString);
+              realElement.append(newElement);
             }
           }
         });

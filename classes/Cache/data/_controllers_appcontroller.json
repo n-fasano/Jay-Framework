@@ -1,1 +1,0 @@
-{"app":{"@Route":"\/","parameters":[]},"__routes":{"\/":{"controller":"Controllers\\AppController","method":"app","route_parameters":[],"parameters":[]}},"__timestamp":1577390610}

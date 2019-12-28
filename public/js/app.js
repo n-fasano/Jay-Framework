@@ -12,62 +12,69 @@ class Utility {
     }
 }
 
-let app = $("#app");
 
-let product = {
-    name: "Un super téléphone",
-    title: "Titre du <li>",
-    price: 200
-};
+
 
 let html = `
-    <h1 if="hidden">{{ name }}</h1>
+    <h1 if="hidden">{{ title }}</h1>
     <article>
         <p>
-            <ul for="products">
-                <li>{{ title }}</li>
-                <li>{{ price }} €</li>
+            <ul foreach="products">
+                <li>{{ name }} - {{ price }}€</li>
             </ul>
         </p>
     </article>
     <input type="text" id="input_title">
     <button id="hideBtn">Click me mofo ({{ hidden }})</button>
 `;
+let app = $("#app");
+let state = {
+    title: "Vous êtes ici : " + location.pathname,
+    products: [
+        {
+            name: "Un super téléphone",
+            price: 200
+        },
+        {
+            name: "Un super téléphone",
+            price: 200
+        },
+    ],
+    hidden: false
+};
 
-let product_page = new Component({ template: html, root: app, state: product });
+let product_page = new Component({ template: html, root: app, state: state });
+
+let products = [
+    {
+        name: 'Une belle table',
+        price: 2001
+    },
+    {
+        name: 'Un vol-au-vent succulent',
+        price: 48
+    },
+    {
+        name: 'Un autre produit',
+        price: 17.77
+    }
+];
+
+product_page.setState({ products: products });
+
+$('#input_title').on('input', e => product_page.setState({ title: e.target.value }));
+$('#hideBtn').on('click', e => product_page.setState({
+    hidden: !product_page.getState('hidden')
+}));
 
 let html2 = `
     <p>{{ test }}</p>
 `;
 
-let component2 = new Component({
-    template: html2,
-    root: app,
-    state: {
-        test: 'coucou'
-    }
-});
-
-let products = [
-    {
-        title: 'Une belle table',
-        price: 2001
-    },
-    {
-        title: 'Un vol-au-vent succulent',
-        price: 48
-    },
-    {
-        title: 'Un autre produit',
-        price: 17.77
-    }
-];
-
-$('#input_title').on('input', e => product_page.setState({ name: e.target.value }));
-$('#hideBtn').on('click', e => product_page.setState({
-    hidden: !product_page.state.hidden.value
-}));
-
-product_page.setState({ products: products });
-
-function changeTitle(e) { }
+// let component2 = new Component({
+//     template: html2,
+//     root: app,
+//     state: {
+//         test: 'coucou'
+//     }
+// });
