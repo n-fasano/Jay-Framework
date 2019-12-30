@@ -2,7 +2,7 @@
 
 require_once 'config.php';
 require_once 'autoloader.php';
-require_once 'classes/Dumper/dumper.php';
+require_once 'classes/Dumper/include_me.php';
 
 $routeMatcher = new Routing\RouteMatcher;
 $routeInfo = $routeMatcher->resolve($_SERVER['REQUEST_URI']);
