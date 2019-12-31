@@ -25,5 +25,5 @@ Mon, 30th of December, 2019:
 
 Tue, 31th of December, 2019:
   - ORM can now hydrate objects !
-  - The "maker" is now fully functionnal for basic class creation and update.
+  - The "writer" is now fully functionnal for basic class creation and update. Still no relation handling.
   - Created the SQLDatabase, SQLTable and SQLColumn object classes
