@@ -6,14 +6,20 @@ class ClassWriter
 {
     static private $tabLength = 4;
 
-    static public function write(string $classname)
+    static public function write(string $classname, array $data = [])
     {
         if (!$classname) {
             echo 'Please specify the name of the class !';
             die;
         }
 
-        $properties = self::STDIN_getProperties();
+        $properties = [];
+        if (!$data) {
+            $properties = self::getPropertiesDataFromSTDIN();
+        } else {
+            $properties = self::getPropertiesDataFromFetchAssoc($data);
+        }
+
         $propertiesString = self::getProperties($properties);
         $gettersAndSettersString = self::getGettersAndSetters($properties);
         
@@ -63,7 +69,7 @@ class ClassWriter
         return file_put_contents(CLASSES_DIR . "/$classname.php", $file);
     }
 
-    static public function STDIN_getProperties()
+    static public function getPropertiesDataFromSTDIN()
     {
         $properties = [];
         while(true) {
@@ -145,5 +151,15 @@ class ClassWriter
         }
         
         return $text;
+    }
+
+    static public function getPropertiesDataFromFetchAssoc(array $data)
+    {
+        $properties = [];
+        foreach ($data as $key => $value)
+        {
+            $properties[] = [$key, 'string', '?'];
+        }
+        return $properties;
     }
 }

@@ -3,6 +3,9 @@
 namespace ORM;
 
 use Services\CaseConverter;
+use ORM\SQL\Database;
+use ORM\SQL\Table;
+use ORM\SQL\Column;
 
 class ORM
 {
@@ -80,8 +83,11 @@ class ORM
                 ORDER BY schema_name;"
         );
         $stmt->execute();
-        $results = $stmt->fetchAll();
-        return $this->hydrateAll(SQLDatabase::class, $results);
+        $results = [];
+        while ($result = $stmt->fetchObject(Database::class)) {
+            $results[] = $result;
+        }
+        return $results;
     }
 
     public function getTables(string $dbName)
@@ -93,8 +99,11 @@ class ORM
                 ORDER BY table_schema, table_name;"
         );
         $stmt->execute();
-        $results = $stmt->fetchAll();
-        return $this->hydrateAll(SQLTable::class, $results);
+        $results = [];
+        while ($result = $stmt->fetchObject(Table::class)) {
+            $results[] = $result;
+        }
+        return $results;
     }
 
     public function createTable(object $object)
@@ -111,8 +120,11 @@ class ORM
                 WHERE TABLE_NAME = '$tableName' AND TABLE_SCHEMA = '$dbName';"
         );
         $stmt->execute();
-        $results = $stmt->fetchAll();
-        return $this->hydrateAll(SQLColumn::class, $results);
+        $results = [];
+        while ($result = $stmt->fetchObject(Column::class)) {
+            $results[] = $result;
+        }
+        return $results;
     }
 
     public function getAll()

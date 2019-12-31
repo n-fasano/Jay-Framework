@@ -1,9 +1,11 @@
 <?php
 
-
 require_once 'config.php';
 require_once 'autoloader.php';
 require_once 'classes/Dumper/include_me.php';
+
+$db = new ORM\ORM;
+dd($db->getDatabases());
 
 $routeMatcher = new HTTP\RouteMatcher;
 $routeInfo = $routeMatcher->resolve($_SERVER['REQUEST_URI']);

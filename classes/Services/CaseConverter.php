@@ -13,7 +13,7 @@ class CaseConverter
             $ASCII = ord($str[$i]);
             if ((47 < $ASCII && $ASCII < 58) || (64 < $ASCII && $ASCII < 91) || (96 < $ASCII && $ASCII < 123)) 
             {
-                $camelCase .= $str[$i];
+                $camelCase .= lcfirst($str[$i]);
             } 
             else 
             {
