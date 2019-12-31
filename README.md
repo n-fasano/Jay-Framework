@@ -18,3 +18,12 @@ Sat, 28th of December, 2019:
   - Made it so controllers themselves can have a route (thus all their method routes have a prefix)
   - Started working on the front-end framework again
   - This code is feeling familiar again, improved it slightly
+
+Mon, 30th of December, 2019:
+  - Added @Require annotation to inject dependencies
+  - Created a container
+
+Tue, 31th of December, 2019:
+  - ORM can now hydrate objects !
+  - The "maker" is now fully functionnal for basic class creation and update.
+  - Created the SQLDatabase, SQLTable and SQLColumn object classes

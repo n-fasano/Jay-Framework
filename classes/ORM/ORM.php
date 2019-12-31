@@ -2,6 +2,8 @@
 
 namespace ORM;
 
+use Services\CaseConverter;
+
 class ORM
 {
     protected $pdo;
@@ -17,6 +19,45 @@ class ORM
         ]);
     }
 
+    public function hydrate(string $classname, array $data)
+    {
+        $object = new $classname;
+        foreach ($data as $key => $value)
+        {
+            $methodName = 'set' . CaseConverter::toPascalCase($key);
+            $reflection = new \ReflectionMethod($object, $methodName);
+
+            $type = $reflection->getParameters()[0]->getType()->__toString();
+            switch ($type)
+            {
+                case 'DateTime':
+                    if ($value) {
+                        $value = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+                    }
+                break;
+                case 'int':
+                case 'float':
+                case 'string':
+                case 'bool':
+                    settype($value, $type);
+                break;
+            }
+
+            $object->$methodName($value);
+        }
+        return $object;
+    }
+
+    public function hydrateAll(string $classname, array $multi)
+    {
+        $objects = [];
+        foreach ($multi as $entry)
+        {
+            $objects[] = $this->hydrate($classname, $entry);
+        }
+        return $objects;
+    }
+
     public function getSystemDatabases()
     {
         $stmt = $this->pdo->prepare(
@@ -26,7 +67,8 @@ class ORM
                 ORDER BY schema_name;"
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        return $this->hydrateAll(SQLDatabase::class, $results);
     }
 
     public function getDatabases()
@@ -38,7 +80,8 @@ class ORM
                 ORDER BY schema_name;"
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        return $this->hydrateAll(SQLDatabase::class, $results);
     }
 
     public function getTables(string $dbName)
@@ -50,7 +93,8 @@ class ORM
                 ORDER BY table_schema, table_name;"
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        return $this->hydrateAll(SQLTable::class, $results);
     }
 
     public function createTable(object $object)
@@ -67,7 +111,8 @@ class ORM
                 WHERE TABLE_NAME = '$tableName' AND TABLE_SCHEMA = '$dbName';"
         );
         $stmt->execute();
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        return $this->hydrateAll(SQLColumn::class, $results);
     }
 
     public function getAll()

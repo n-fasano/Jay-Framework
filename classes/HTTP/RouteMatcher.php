@@ -1,6 +1,6 @@
 <?php
 
-namespace Routing;
+namespace HTTP;
 
 class RouteMatcher
 {
