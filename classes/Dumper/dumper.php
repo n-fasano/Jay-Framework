@@ -11,6 +11,7 @@ class Dumper
         $vars = func_get_args();
         include_once 'templates/dumper.css.html';
         echo '<div class="dumpster-wrapper">';
+        self::file_info();
         echo '<ul class="dumpster">';
         foreach ($vars as $var) {
             self::real_dump($var);
@@ -110,7 +111,7 @@ class Dumper
     private static function file_info()
     {
         $backtrace = debug_backtrace();
-        echo '<h4>' . $backtrace[1]['file'] . ' - Line ' . $backtrace[1]['line'] . '</h4>';
+        echo '<h4>' . $backtrace[2]['file'] . ' - Line ' . $backtrace[2]['line'] . '</h4>';
     }
 
     private static function getModifierSign(string $modifier)

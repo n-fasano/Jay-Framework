@@ -15,11 +15,9 @@ class RequestData
     {
         $this->chomp($_GET);
         $this->chomp($_POST);
-
-        $this->hydrate();
     }
 
-    public function chomp($data)
+    private function chomp($data)
     {
         foreach ($data as $key => $value) {
             $this->sanitize($key);
@@ -28,13 +26,47 @@ class RequestData
         }
     }
 
-    public function sanitize(&$string)
+    private function sanitize(&$string)
     {
-    
+        $string = htmlspecialchars($string);
     }
 
-    public function hydrate()
+    public function assert(array $assertions, array $options = [])
     {
-        
+        foreach ($assertions as $variableName => $type)
+        {
+            switch ($type) {
+                case 'int':
+                case 'float':
+                case 'bool':
+                case 'email':
+                    $filter = $this->getFilter($type);
+                    $this->data[$variableName] = 
+                        filter_input(INPUT_GET, $variableName, $filter) ??
+                        filter_input(INPUT_POST, $variableName, $filter);
+                break;
+                case 'DateTime':
+                    $this->data[$variableName] = \DateTime::createFromFormat(
+                        $options['format'],
+                        $variableName
+                    );
+                break;
+                default:
+                    if (class_exists($type)) {
+                        $this->data[$variableName] = new $type($variableName);
+                    }
+            }
+        } 
+    }
+
+    private $filters = [
+        'int' => FILTER_VALIDATE_INT,
+        'float' => FILTER_VALIDATE_FLOAT,
+        'bool' => FILTER_VALIDATE_BOOLEAN,
+        'email' => FILTER_VALIDATE_EMAIL,
+    ];
+    private function getFilter(string $type)
+    {
+        return $this->filters[$type] ?? $type;
     }
 }

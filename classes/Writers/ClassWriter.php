@@ -12,13 +12,16 @@ class ClassWriter
             echo 'Please specify the name of the class !';
             die;
         }
-
+        
         $properties = [];
         if (!$data) {
             $properties = self::getPropertiesDataFromSTDIN();
         } else {
-            $properties = self::getPropertiesDataFromFetchAssoc($data);
+            $properties = $data;
         }
+        // else {
+        //     $properties = self::getPropertiesDataFromFetchAssoc($data);
+        // }
 
         $propertiesString = self::getProperties($properties);
         $gettersAndSettersString = self::getGettersAndSetters($properties);
@@ -32,7 +35,7 @@ class ClassWriter
             self::update($classname, $propertiesString, $gettersAndSettersString);
         }
 
-        die('Class created/updated !');
+        echo 'Class created/updated !';
     }
 
     static public function new(string $classname, string $propertiesString, string $gettersAndSettersString)
@@ -161,5 +164,42 @@ class ClassWriter
             $properties[] = [$key, 'string', '?'];
         }
         return $properties;
+    }
+
+    static public function createFromTable(\ORM\SQL\Table $table, \ORM\ORM $db, string $dbName = null)
+    {
+        if (!$dbName)
+        {
+            throw new \Exception('You need to specify the database name.');
+        }
+
+        $name = $table->getTableName();
+        $columns = $db->getColumns($dbName, $name);
+        $properties = [];
+        foreach ($columns as $column)
+        {
+            $properties[] = [
+                $column->getColumnName(),
+                self::getPHPType($column->getDataType()),
+                $column->getIsNullable() === 'NO' ? '' : '?'
+            ];
+        }
+
+        $classname = \Services\CaseConverter::toPascalCase($name);
+
+        $propertiesString = self::getProperties($properties);
+        $gettersAndSettersString = self::getGettersAndSetters($properties);
+        self::new($classname, $propertiesString, $gettersAndSettersString);
+        echo 'Class created/updated !';
+    }
+
+    static public $phpTypes = [
+        'varchar' => 'string',
+        'longtext' => 'string',
+        'datetime' => 'DateTime',
+    ];
+    static public function getPHPType($sqlType)
+    {
+        return self::$phpTypes[$sqlType] ?? $sqlType;
     }
 }

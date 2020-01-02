@@ -29,7 +29,7 @@ let html = `
 `;
 let app = $("#app");
 let state = {
-    title: "Vous êtes ici : " + location.pathname,
+    title: "Vous êtes ici : " + location.pathname + location.search,
     products: [
         {
             name: "Un super téléphone",

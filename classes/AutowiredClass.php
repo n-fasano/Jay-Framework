@@ -45,4 +45,14 @@ class AutowiredClass
             $this->dependencies[$matches[2][$i]] = Container::get($matches[1][$i]);
         }
     }
+
+    public function readAsserts()
+    {
+
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        dd('hit');
+    }
 }

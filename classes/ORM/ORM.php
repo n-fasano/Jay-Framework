@@ -2,6 +2,7 @@
 
 namespace ORM;
 
+use DataObjects\DataObject;
 use Services\CaseConverter;
 use ORM\SQL\Database;
 use ORM\SQL\Table;
@@ -61,6 +62,11 @@ class ORM
         return $objects;
     }
 
+    static public function load(DataObject $do, int $id)
+    {
+        
+    }
+
     public function getSystemDatabases()
     {
         $stmt = $this->pdo->prepare(
@@ -71,7 +77,7 @@ class ORM
         );
         $stmt->execute();
         $results = $stmt->fetchAll();
-        return $this->hydrateAll(SQLDatabase::class, $results);
+        return $this->hydrateAll(Database::class, $results);
     }
 
     public function getDatabases()
