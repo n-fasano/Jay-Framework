@@ -12,6 +12,7 @@ require_once 'classes/Dumper/include_me.php';
 // {
 //     Writers\ClassWriter::createFromTable($table, $db, 'cv');
 // }
+
 // $dbName = 'cv';
 // $tables = $db->getTables($dbName);
 // $columns = $db->getColumns($dbName, 'task');
