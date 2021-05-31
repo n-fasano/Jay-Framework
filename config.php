@@ -12,4 +12,5 @@ const PUBLIC_DIR = BASE_DIR . '/public';
 const CONTROLLER_DIR = CLASSES_DIR . '/Controllers';
 const CACHE_DIR = CLASSES_DIR . '/Cache/data';
 
-const WEB_ROOT = 'http://localhost';
+const PORT = 80;
+const WEB_ROOT = 'http://localhost:'.PORT;

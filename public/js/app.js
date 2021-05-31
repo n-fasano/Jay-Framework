@@ -1,4 +1,5 @@
-// const filmController = new FilmController('index');
+const filmController = new FilmController('index');
+filmController.index();
 
 class Utility {
     static strToHTML(templateString) {

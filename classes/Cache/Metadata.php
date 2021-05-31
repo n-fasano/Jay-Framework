@@ -55,9 +55,17 @@ class Metadata
         $object = new $classname;
         $reflection = new \ReflectionClass($object);
 
-        $metadata = [];
+        $metadata = [
+            '__routes' => [
+                'GET' => [],
+                'POST' => [],
+                'PUT' => [],
+                'PATCH' => [],
+                'DELETE' => []
+            ]
+        ];
         $classComment = $reflection->getDocComment();
-        preg_match_all('/(@.+)\r\n/', $classComment, $matches);
+        preg_match_all('/(@.+)\n/', $classComment, $matches);
         $matches = $matches[1];
         foreach ($matches as $match) {
             $data = explode(' ', $match);
@@ -68,7 +76,9 @@ class Metadata
         $methods = $reflection->getMethods();
         foreach ($methods as $method) {
             $comment = $method->getDocComment();
-            preg_match_all('/(@.+)\r\n/', $comment, $matches);
+            preg_match_all('/(@.+)\n/', $comment, $matches);
+
+            /** @var array $matches */
             $matches = $matches[1];
 
             foreach ($matches as $match) {
@@ -78,9 +88,14 @@ class Metadata
                 $metadata[$methodName][$info] = $data[1] ?? null;
 
                 switch ($info) {
-                    case '@Route':
+                    case '@Get':
+                    case '@Post':
+                    case '@Put':
+                    case '@Patch':
+                    case '@Delete':
+                        $verb = strtoupper(substr($info, 1));
                         $route = $data[1];
-                        $metadata['__routes'][$route] = $this->analyzeRoute($route, $method, $object);
+                        $metadata['__routes'][$verb][$route] = $this->analyzeRoute($route, $verb, $method, $object);
                         $metadata[$methodName]['parameters'] = $metadata['__routes'][$route]['parameters'];
                         break;
                 }
@@ -92,38 +107,51 @@ class Metadata
 
     public function routeCensus(array $controllers, string $hash)
     {
-        $routes = [];
+        $routes = [
+            'GET' => [],
+            'POST' => [],
+            'PUT' => [],
+            'PATCH' => [],
+            'DELETE' => []
+        ];
+
         foreach ($controllers as $controllerName) {
             $controllerMetadata = $this->identify($controllerName);
 
             $baseRoute = '';
             if (isset($controllerMetadata['@Route'])) {
                 $baseRoute = $controllerMetadata['@Route'];
-                $routes[$baseRoute] = [];
+                foreach ($routes as $verb => $routeData) {
+                    $routes[$verb][$baseRoute] = [];
+                }
             }
 
             if (isset($controllerMetadata['__routes'])) {
-                foreach ($controllerMetadata['__routes'] as $route => $callable) {
-                    $route_split = preg_split(
-                        '/(\/[^\/]+)/',
-                        $route,
-                        null,
-                        PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
-                    );
+                foreach ($controllerMetadata['__routes'] as $verb => $routesData) {
+                    foreach ($routesData as $route => $callable) {
+                        $route_split = preg_split(
+                            '/(\/[^\/]+)/',
+                            $route,
+                            -1,
+                            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+                        );
 
-                    if ($baseRoute)
-                        $current_array = &$routes[$baseRoute];
-                    else
-                        $current_array = &$routes;
-
-                    foreach ($route_split as $r) {
-                        if (!isset($current_array[$r])) {
-                            $current_array[$r] = [];
+                        if ($baseRoute) {
+                            $current_array = &$routes[$verb][$baseRoute];
                         }
-                        $current_array = &$current_array[$r];
-                    }
+                        else
+                            $current_array = &$routes[$verb];
 
-                    $current_array['callable'] = $callable;
+    
+                        foreach ($route_split as $fragment) {
+                            if (!isset($current_array[$fragment])) {
+                                $current_array[$fragment] = [];
+                            }
+                            $current_array = &$current_array[$fragment];
+                        }
+    
+                        $current_array['callable'] = $callable;
+                    }
                 }
             }
         }
@@ -167,7 +195,7 @@ class Metadata
         return $data['__routes'];
     }
 
-    public function analyzeRoute(string $route, \ReflectionMethod $method, object $object)
+    public function analyzeRoute(string $route, string $verb, \ReflectionMethod $method, object $object)
     {
         $methodName = $method->getName();
         $method_params = array_map(function ($param) {
@@ -181,6 +209,7 @@ class Metadata
         return [
             'controller' => get_class($object),
             'method' => $methodName,
+            'verb' => $verb,
             'route_parameters' => array_filter(explode('/', $route), function ($e) {
                 return $e;
             }),
@@ -197,7 +226,7 @@ class Metadata
             if ($info->isFile()) {
                 $path = $info->getPathname();
                 $controllerRelativePath = substr($path, strpos($path, 'Controllers'));
-                $controllerName = str_replace('.php', '', $controllerRelativePath);
+                $controllerName = str_replace(['.php', '/'], ['', '\\'], $controllerRelativePath);
                 $files[$path] = $controllerName;
             }
         }

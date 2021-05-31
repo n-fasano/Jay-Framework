@@ -1,8 +1,9 @@
 <?php
 
 spl_autoload_register(function ($classname) {
-    if (!is_file(CLASSES_DIR . '/' . $classname . '.php')) {
+    $classPath = CLASSES_DIR . '/' . str_replace('\\', '/', $classname) . '.php';
+    if (!is_file($classPath)) {
         return;
     }
-    require_once CLASSES_DIR . '/' . $classname . '.php';
+    require_once $classPath;
 });

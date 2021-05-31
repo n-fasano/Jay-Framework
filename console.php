@@ -11,10 +11,10 @@ if (!isset($argv[1]))
 
 switch ($argv[1]) 
 {
-    case 'write::class':
+    case 'write:class':
         Writers\ClassWriter::write($argv[2] ?? null);
         break;
-    case 'cache::clear':
+    case 'cache:clear':
         $directory = new RecursiveDirectoryIterator(CACHE_DIR);
         $iterator = new RecursiveIteratorIterator($directory);
 
@@ -28,8 +28,8 @@ switch ($argv[1])
         }
         break;
     default:
-        echo 'USAGE: php ./console.php write::class [classname]' . PHP_EOL;
-        echo 'USAGE: php ./console.php cache::clear' . PHP_EOL;
+        echo 'USAGE: php ./console.php write:class [classname]' . PHP_EOL;
+        echo 'USAGE: php ./console.php cache:clear' . PHP_EOL;
         break;
 }
 

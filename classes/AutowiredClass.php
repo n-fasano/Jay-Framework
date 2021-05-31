@@ -39,7 +39,7 @@ class AutowiredClass
     public function __construct()
     {
         $comment = (new ReflectionClass($this))->getDocComment();
-        preg_match_all('/@Require ([^ ]+) ([^\r\n]+)\r\n/', $comment, $matches);
+        preg_match_all('/@Require ([^ ]+) ([^\r\n]+)\n/', $comment, $matches);
 
         for ($i = 0; $i < count($matches[1]); $i++) {
             $this->dependencies[$matches[2][$i]] = Container::get($matches[1][$i]);

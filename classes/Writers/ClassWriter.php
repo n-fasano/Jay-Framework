@@ -6,10 +6,10 @@ class ClassWriter
 {
     static private $tabLength = 4;
 
-    static public function write(string $classname, array $data = [])
+    static public function write(string $classname = null, array $data = [])
     {
         if (!$classname) {
-            echo 'Please specify the name of the class !';
+            echo 'Please specify the name of the class !' . PHP_EOL;
             die;
         }
         
@@ -47,9 +47,9 @@ class ClassWriter
         {
         EOT;
 
-        $file .= "\r\n";
+        $file .= "\n";
         $file .= $propertiesString;
-        $file .= "\r\n";
+        $file .= "\n";
         $file .= $gettersAndSettersString;
         $file .= "}";
 
@@ -65,9 +65,9 @@ class ClassWriter
             return self::new($classname, $propertiesString, $gettersAndSettersString);
         }
 
-        $file = substr_replace($file, $propertiesString . "\r\n", $firstMethodIndex - self::$tabLength, 0);
+        $file = substr_replace($file, $propertiesString . "\n", $firstMethodIndex - self::$tabLength, 0);
         $lastBracketIndex = strrpos($file, '}');
-        $file = substr_replace($file, "\r\n" . $gettersAndSettersString, $lastBracketIndex, 0);
+        $file = substr_replace($file, "\n" . $gettersAndSettersString, $lastBracketIndex, 0);
 
         return file_put_contents(CLASSES_DIR . "/$classname.php", $file);
     }
@@ -112,16 +112,11 @@ class ClassWriter
         foreach($properties as $i => $data) {
             $property = $data[0];
             $type = $data[1];
-            $upper = ucfirst($type);
-
             $text .= <<<EOT
-                /**
-                 * @$upper
-                 */
-                private $$property;
+                private $type $$property;
             EOT;
-            $text .= "\r\n";
-            $text .= "\r\n";
+            $text .= "\n";
+            $text .= "\n";
         }
 
         return $text;
@@ -149,8 +144,8 @@ class ClassWriter
                     return \$this;
                 }
             EOT;
-            $text .= "\r\n";
-            $text .= "\r\n";
+            $text .= "\n";
+            $text .= "\n";
         }
         
         return $text;

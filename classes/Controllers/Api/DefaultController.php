@@ -8,7 +8,7 @@ namespace Controllers\Api;
 class DefaultController
 {
     /**
-     * @Route /
+     * @Get /
      */
     public function info()
     {
@@ -16,15 +16,15 @@ class DefaultController
     }
 
     /**
-     * @Route /#string
+     * @Get /#string
      */
     public function list(string $entityName)
     {
-        return "Vous avez demandé tous les : $entityName";
+        return "Vous avez demandé tous les $entityName";
     }
 
     /**
-     * @Route /#string/#int
+     * @Get /#string/#int
      */
     public function detail(string $entityName, int $id)
     {
@@ -32,7 +32,7 @@ class DefaultController
     }
 
     /**
-     * @Route /#string/create
+     * @Post /#string
      */
     public function insert(string $entityName)
     {
@@ -40,7 +40,7 @@ class DefaultController
     }
 
     /**
-     * @Route /#string/update/#int
+     * @Patch /#string/#int
      */
     public function update(string $entityName, int $id)
     {
@@ -48,7 +48,7 @@ class DefaultController
     }
 
     /**
-     * @Route /#string/delete/#int
+     * @Delete /#string/#int
      */
     public function delete(string $entityName, int $id)
     {

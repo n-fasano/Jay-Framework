@@ -4,17 +4,18 @@ namespace HTTP;
 
 class RouteMatcher
 {
-    public function resolve(string $path): array
+    public function resolve(string $verb, string $path): array
     {
         $segments = preg_split(
             '/(\/[^\/]+)/',
             $path,
-            null,
+            -1,
             PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
         );
         $all_routes = (new \Cache\Metadata)->getRoutes();
+        $routes = $all_routes[$verb];
 
-        return $this->match($all_routes, $segments);
+        return $this->match($routes, $segments);
     }
 
     public function match(array $routes, array $path_segments): array
