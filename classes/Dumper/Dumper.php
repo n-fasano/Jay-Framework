@@ -10,9 +10,9 @@ class Dumper
     {
         $vars = func_get_args();
         include_once 'templates/dumper.css.html';
-        echo '<div class="dumpster-wrapper">';
+        echo '<div class="dumper-wrapper">';
         self::file_info();
-        echo '<ul class="dumpster">';
+        echo '<ul class="dumper">';
         foreach ($vars as $var) {
             self::real_dump($var);
         }
@@ -25,9 +25,9 @@ class Dumper
     {
         $vars = func_get_args();
         include_once 'templates/dumper.css.html';
-        echo '<div class="dumpster-wrapper">';
+        echo '<div class="dumper-wrapper">';
         self::file_info();
-        echo '<ul class="dumpster">';
+        echo '<ul class="dumper">';
         foreach ($vars as $var) {
             self::real_dump($var);
         }
@@ -64,7 +64,7 @@ class Dumper
             echo "
             <li class='dump'>
                 $propertyName<h6><span class='dump-type arr'>[array]</span> ($count)</h6>
-                <ul class='dumpster'>
+                <ul class='dumper'>
         ";
             foreach ($array as $key => $value) {
                 $type = substr(gettype($key), 0, 3);
@@ -87,7 +87,7 @@ class Dumper
             echo "
             <li class='dump'>
                 $propertyName<h6><span class='dump-type obj'>{obj}</span> $class</h6>
-                <ul class='dumpster'>
+                <ul class='dumper'>
         ";
             foreach ($properties as $property) {
                 $modifiers = \Reflection::getModifierNames($property->getModifiers());

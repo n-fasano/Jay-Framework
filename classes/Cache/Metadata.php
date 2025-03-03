@@ -222,6 +222,7 @@ class Metadata
         $directory = new \RecursiveDirectoryIterator(CONTROLLER_DIR);
         $iterator = new \RecursiveIteratorIterator($directory);
         $files = [];
+
         foreach ($iterator as $info) {
             if ($info->isFile()) {
                 $path = $info->getPathname();

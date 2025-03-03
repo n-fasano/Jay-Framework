@@ -1,7 +1,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', e => {
-        document.querySelectorAll('.dumpster').forEach(dumpster => {
-            const dumps = Array.from(dumpster.children).filter(child => child.classList.contains('dump'));
+        document.querySelectorAll('.dumper').forEach(dumper => {
+            const dumps = Array.from(dumper.children).filter(child => child.classList.contains('dump'));
             dumps.forEach(function (dump) {
                 const H6 = Array.from(dump.children).find(child => child.tagName === 'H6');
                 H6.addEventListener('click', e => {

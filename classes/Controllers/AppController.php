@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use AutowiredClass;
+use Container;
 
 /**
  * @Require Cache\Cache cache
@@ -25,7 +26,7 @@ class AppController extends AutowiredClass
         extract($this->request->get());
 
         dump($test, $var, $str);
-        dump($this->cache);
+        dump($this->request);
 
         ob_start();
         include BASE_DIR . '/public/app.phtml';

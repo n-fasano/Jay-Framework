@@ -12,7 +12,7 @@ class DefaultController
      */
     public function info()
     {
-        return "Vous êtes bien sur l'API";
+        return "Vous êtes bien sur l'API"; // EN: You are on the API.
     }
 
     /**
@@ -20,7 +20,7 @@ class DefaultController
      */
     public function list(string $entityName)
     {
-        return "Vous avez demandé tous les $entityName";
+        return json_encode([$entityName => []]);
     }
 
     /**
@@ -28,7 +28,7 @@ class DefaultController
      */
     public function detail(string $entityName, int $id)
     {
-        return "Vous avez demandé le/la $entityName n°$id";
+        return json_encode(['type' => $entityName, 'id' => $id]);
     }
 
     /**
@@ -36,7 +36,7 @@ class DefaultController
      */
     public function insert(string $entityName)
     {
-        return "Vous avez demandé à créer un(e) $entityName";
+        return "Vous avez demandé à créer un(e) $entityName"; // EN: You asked to create a $entityName.
     }
 
     /**
@@ -44,7 +44,7 @@ class DefaultController
      */
     public function update(string $entityName, int $id)
     {
-        return "Vous avez demandé à modifier le/la $entityName n°$id";
+        return "Vous avez demandé à modifier le/la $entityName n°$id"; // EN: You asked to update the $entityName with ID $id.
     }
 
     /**
@@ -52,6 +52,6 @@ class DefaultController
      */
     public function delete(string $entityName, int $id)
     {
-        return "Vous avez demandé à supprimer le/la $entityName n°$id";
+        return "Vous avez demandé à supprimer le/la $entityName n°$id"; // EN: You asked to delete the $entityName with ID $id.
     }
 }
